@@ -18,6 +18,5 @@ public class Main {
         Menu<String> menu= new ManagerCandidate(title, s);
         menu.run();
     }
-       
-        
+               
 }

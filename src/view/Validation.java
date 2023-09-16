@@ -99,10 +99,10 @@ public class Validation {
         for (Candidate candidate : list) {
             if(candidate.getId().equalsIgnoreCase(id)){
                 System.err.println("Id exist in list!");
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     public static int checkInputExperience(int birthDate){

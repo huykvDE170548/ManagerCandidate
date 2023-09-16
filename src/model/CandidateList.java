@@ -28,11 +28,11 @@ public class CandidateList {
         this.validation= new Validation();
     }
     
-    public static void createCandidate(int type){
+    public void createCandidate(int type){
         while(true){
             System.out.println("Enter id: ");
             String id= Validation.checkInputString();
-            if(!Validation.checkIdExist(list, id)){
+            if(Validation.checkIdExist(list, id)){
                 return;
             }
             System.out.println("Enter first name: ");
@@ -66,7 +66,7 @@ public class CandidateList {
         }
     }
     
-    public static void createExperience(Candidate candidate) {
+    public void createExperience(Candidate candidate) {
         System.out.println("Enter year of experience: ");
         int yearExperience = Validation.checkInputExperience(candidate.getBirthDate());
         System.out.println("Enter professional skill: ");
@@ -75,10 +75,10 @@ public class CandidateList {
         Experience experience= new Experience(candidate.getId(), candidate.getFirstName(), candidate.getLastName(),
                 candidate.getBirthDate(), candidate.getAddress(),
                 candidate.getPhone(), candidate.getEmail(), candidate.getTypeCandidate(), yearExperience, professionalSkill);
-        listExperience.add(experience);
+        listExperience.add(experience);       
     }
     
-    public static void createFresher(Candidate candidate) {
+    public void createFresher(Candidate candidate) {
         System.out.println("Enter graduation date: ");
         int graduationDate = Validation.checkInputGraduationDate(candidate.getBirthDate());
         System.out.println("Enter graduation rank: ");
@@ -92,7 +92,7 @@ public class CandidateList {
         listFresher.add(fresher);
     }
     
-     public static void createIntern(Candidate candidate) {
+    public void createIntern(Candidate candidate) {
         System.out.print("Enter major: ");
         String major = Validation.checkInputString();
         System.out.print("Enter semester: ");
@@ -106,32 +106,174 @@ public class CandidateList {
         listIntern.add(intern);
     }
     
-    public static void printListCandidate(){
+    public void update(int type){        
+        System.out.println("Enter ID to update: ");
+        String id = Validation.checkInputString();
+        Candidate candidate_find = findIdCandidate(id);
+        if (candidate_find != null) {
+            System.out.println("Enter first name to update: ");
+            String firstName= Validation.checkInputString();
+            candidate_find.setFirstName(firstName);
+            System.out.println("Enter last name to update: ");
+            String lastName= Validation.checkInputString();
+            candidate_find.setLastName(lastName);
+            System.out.println("Enter birth date to update: ");
+            int birthDate= Validation.checkInputIntLimit(1990, Calendar.getInstance().get(Calendar.YEAR));
+            candidate_find.setBirthDate(birthDate);
+            System.out.println("Enter address to update: ");
+            String address= Validation.checkInputString();
+            candidate_find.setAddress(address);
+            System.out.println("Enter phone to update: ");
+            String phone= Validation.checkPhone();
+            candidate_find.setAddress(address);
+            System.out.println("Enter email to update: ");
+            String email= Validation.checkEmail();
+            candidate_find.setEmail(email);
+            switch (type) {
+                case 0:                   
+                    Experience experience_find= findIdExperience(id);
+                    experience_find.setFirstName(firstName);
+                    experience_find.setLastName(lastName);
+                    experience_find.setBirthDate(birthDate);
+                    experience_find.setAddress(address);
+                    experience_find.setPhone(phone);
+                    experience_find.setEmail(email);                   
+                    System.out.println("Enter year of experience: ");
+                    experience_find.setExpInYear(Validation.checkInputExperience(candidate_find.getBirthDate()));
+                    System.out.println("Enter professional skill: ");
+                    experience_find.setProSkill(Validation.checkInputString());
+                    break;
+                case 2:
+                    Fresher fresher_find= findIdFresher(id);
+                    fresher_find.setFirstName(firstName);
+                    fresher_find.setLastName(lastName);
+                    fresher_find.setBirthDate(birthDate);
+                    fresher_find.setAddress(address);
+                    fresher_find.setPhone(phone);
+                    fresher_find.setEmail(email);
+                    System.out.println("Enter graduation date: ");
+                    fresher_find.setDateGraduation(Validation.checkInputGraduationDate(candidate_find.getBirthDate()));
+                    System.out.println("Enter graduation rank: ");
+                    fresher_find.setRankGraduation(Validation.checkRankOfGraduation());
+                    System.out.println("Enter university graduation: ");
+                    fresher_find.setUniversity(Validation.checkInputString());
+                    break;
+                case 3:
+                    Intern intern_find= findIdIntern(id);
+                    intern_find.setFirstName(firstName);
+                    intern_find.setLastName(lastName);
+                    intern_find.setBirthDate(birthDate);
+                    intern_find.setAddress(address);
+                    intern_find.setPhone(phone);
+                    intern_find.setEmail(email);
+                    System.out.print("Enter major: ");
+                    intern_find.setMajor(Validation.checkInputString());
+                    System.out.print("Enter semester: ");
+                    intern_find.setSemester(Validation.checkInputString());
+                    System.out.print("Enter university: ");
+                    intern_find.setUniversity(Validation.checkInputString());
+                    break;                  
+            }
+        }
+
+    }
+            
+    public void delete(int type){
+        System.out.println("Please enter id to delete: ");
+        String id= Validation.checkInputString();
+        Candidate candidate= findIdCandidate(id);
+        if(candidate!=null){
+            list.remove(candidate);
+            switch (type) {
+                case 0:
+                    listExperience.remove(findIdExperience(id));
+                    break;
+                case 1:
+                    listFresher.remove(findIdFresher(id));
+                    break;
+                case 2:
+                    listIntern.remove(findIdIntern(id));
+                    break;
+            }
+        }
+    }    
+        
+    
+    
+    public Candidate findIdCandidate(String id){
+        Candidate candidate_find=null;
+        for (Candidate candidate : list) {
+            if(candidate.getId().equalsIgnoreCase(id)){
+                candidate_find= candidate;
+                break;
+            }
+        }
+        return candidate_find;
+    }
+    
+    public Experience findIdExperience(String id){
+        Experience experience_find=null;
+        for (Experience experience : listExperience) {
+            if(experience.getId().equalsIgnoreCase(id)){
+                experience_find= experience;
+                break;
+            }
+        }
+        return experience_find;
+    }
+    
+    public Fresher findIdFresher(String id){
+        Fresher fresher_find=null;
+        for (Fresher fresher : listFresher) {
+            if(fresher.getId().equalsIgnoreCase(id)){
+                fresher_find= fresher;
+                break;
+            }
+        }
+        return fresher_find;
+    }
+    
+    public Intern findIdIntern(String id){
+        Intern intern_find=null;
+        for (Intern intern : listIntern) {
+            if(intern.getId().equalsIgnoreCase(id)){
+                intern_find= intern;
+                break;
+            }
+        }
+        return intern_find;
+    }
+    
+    
+    
+    
+    
+    public void printListCandidate(){
         System.out.println("List of candidate:");
         System.out.println("===========EXPERIENCE CANDIDATE============");
         if (!listExperience.isEmpty()) {          
             for (Experience experience : listExperience) {
                 System.out.println(experience.getFirstName() + " " + experience.getLastName());
             }
-        }else System.err.println("Empty! No Candidate!");
+        }else System.out.println("Empty! No Candidate!");
         
         System.out.println("===========FRESHER CANDIDATE===============");
         if (!listFresher.isEmpty()) {     
             for (Fresher fresher : listFresher) {
                 System.out.println(fresher.getFirstName() + " " + fresher.getLastName());
             }
-        }else System.err.println("Empty! No Candidate!");
+        }else System.out.println("Empty! No Candidate!");
         
         System.out.println("===========INTERN CANDIDATE================");
         if (!listIntern.isEmpty()) {           
             for (Intern intern : listIntern) {
                 System.out.println(intern.getFirstName() + " " + intern.getLastName());
             }
-        }else System.err.println("Empty! No Candidate!");
+        }else System.out.println("Empty! No Candidate!");
     
     } 
     
-    public static void searchCandidate(){       
+    public void searchCandidate(){       
         if(list.isEmpty()){
             System.err.println("List is empty!");
         }else{
@@ -150,8 +292,7 @@ public class CandidateList {
                     count++;               
                 }
             }
-            if(count==0) System.err.println("No Found Information Candidate!");    
+            if(count==0) System.out.println("No Found Information Candidate!");    
         }
     }
-
 }

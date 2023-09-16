@@ -52,7 +52,7 @@ public abstract class Menu<T> {
         while (true) {
             int n = getSelected();
             execute(n);
-            if (n > mChon.size()) {
+            if (n > mChon.size()-1) {
                 break;
             }
         }
